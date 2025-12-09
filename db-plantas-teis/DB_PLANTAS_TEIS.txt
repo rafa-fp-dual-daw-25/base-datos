@@ -1,0 +1,447 @@
+--------------------------------------------------------------
+-- 2. Creacion de las tablas
+--------------------------------------------------------------
+
+--------------------------------------------------------------
+-- 2.1. Tabla FamiliaBotanica
+--
+-- Relaciona las plantas con las familias botánicas, almacenando
+-- información como el nombre, descripción, origen geográfico, 
+-- número de especies, y estado de conservación.
+--
+--		idFamilia			Identificador único de la familia botánica
+--		nombre 				Nombre de la familia botánica (ej. "Solanaceae")
+--		nombreComun			Nombre común de la familia botánica si tiene uno (ej. "Tomates" para Solanaceae)
+--		descripcion			Descripción detallada de la familia (características generales)
+--		origen				Región o área geográfica de la familia (ej. "América del Sur")
+--		numEspecies			Número de especies dentro de la familia
+--		caracteristicas		Aspectos distintivos de la familia (ej. "Plantas herbáceas, con hojas alternas")
+--		estadoConservacion	Tipo de conservación de la familia botánica (ej. "En peligro", "Preocupación menor")
+
+CREATE TABLE FamiliaBotanica (
+    idFamilia INT,
+    nombreFamilia varchar (100),
+    nombreComum varchar (100), 			-- no pueda ser nulo
+    descripcion varchar (255),			-- que tenga contenido
+    origen varchar (100),				-- una provincia gallega
+    numEspecies int, 					-- valor natural
+    caracteristicas varchar (255), 		-- que contenido
+    estadoConservacion varchar (50),	-- que sea un valor
+    
+    CONSTRAINT PK_FamiliaBotanica					PRIMARY KEY (idFamilia),
+    CONSTRAINT UQ_FamiliaBotanica_nombre_familia	UNIQUE (nombreFamilia),
+    
+    CONSTRAINT CHK_nombreComun						CHECK (nombreComun IS NOT NULL),
+    CONSTRAINT CHK_descripcion_nula					CHECK (descripcion IS NOT NULL),
+    CONSTRAINT CHK_descripcion_vacia				CHECK (descripcion != ''),
+    CONSTRAINT CHK_origen_desconocido				CHECK (origen IN ('A Coruña', 'Lugo', 'Ourense', 'Pontevedra' )), -- que sea de galicia
+    CONSTRAINT CHK_numEspecies_invalido				CHECK (numEspecies > 0 AND numEspecies < 5000)
+ 	
+    );
+-- -----------------------------------------------------------
+
+
+INSERT INTO FamiliaBotanica VALUES (  1, 'Rosaceae',     'Rosáceas',    'Plantas leñosas, flores vistosas',           'América del Norte',   3000, 'Flores hermafroditas, hojas compuestas',         'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  2, 'Fabaceae',     'Leguminosas', 'Plantas con frutos en forma de vaina',       'Mundial',            19000, 'Nódulos con bacterias fijadoras de nitrógeno',   'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  3, 'Asteraceae',   'Compuestas',  'Plantas con flores en cabezuelas',           'Mundial',            23000, 'Capítulos florales con lígulas',                 'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  4, 'Lamiaceae',    'Labiadas',    'Plantas aromáticas con tallo cuadrado',      'Regiones templadas',  7000, 'Hojas opuestas, flores bilabiadas',              'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  5, 'Poaceae',      'Gramíneas',   'Plantas herbáceas, hojas lineales',          'Mundial',            10000, 'Tallos huecos, flores poco vistosas',            'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  6, 'Solanaceae',   'Solanáceas',  'Plantas con alcaloides, muchas comestibles', 'Sudamérica',          2700, 'Flores actinomorfas, frutos carnosos',           'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  7, 'Apiaceae',     'Umbelíferas', 'Plantas con inflorescencias en umbela',      'Hemisferio norte',    3700, 'Hojas compuestas, tallos huecos',                'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  8, 'Brassicaceae', 'Crucíferas',  'Plantas con flores en forma de cruz',        'Europa y Asia',       4000, 'Frutos en silicuas, hojas alternas',             'Preocupación menor' );
+INSERT INTO FamiliaBotanica VALUES (  9, 'Cactaceae',    'Cactus',      'Plantas suculentas con espinas',             'América',             1750, 'Adaptadas a climas áridos',                      'Vulnerable'         );
+INSERT INTO FamiliaBotanica VALUES ( 10, 'Orchidaceae',  'Orquídeas',   'Plantas epífitas con flores complejas',      'Zonas tropicales',   25000, 'Simetría bilateral, polinización especializada', 'En peligro'         );
+
+--------------------------------------------------------------
+-- 2.2. Tabla TipoPlanta
+--
+-- Esta tabla almacena los diferentes tipos de plantas, 
+-- clasificados según sus características generales. Cada tipo 
+-- de planta puede tener varias especies asociadas, y se almacena 
+-- información sobre su nombre y una breve descripción. 
+-- Esta tabla es útil para organizar las plantas por tipo, 
+-- como "Árbol", "Arbusto", "Hierba", entre otros.
+--
+-- 	idTipo              Identificador único del tipo de planta.
+-- 	nombre              Nombre del tipo de planta (ej. "Árbol", "Arbusto", "Hierba").
+-- 	descripcion         Descripción de las características de este tipo de planta.
+-- 	usoComun            Uso más frecuente del tipo de planta (ej. "Decorativo", "Medicinal").
+-- 	cicloVida           Duración del ciclo de vida del tipo de planta (ej. "Anual", "Perenne").
+--------------------------------------------------------------
+
+
+INSERT INTO TipoPlanta VALUES (  1, 'Arbusto rosáceo',              'Pequeños arbustos de flores rosadas',                  'Ornamental',    'Perenne'  );
+INSERT INTO TipoPlanta VALUES (  2, 'Trepadora rosácea',            'Plantas trepadoras con espinas y flores aromáticas',   'Decorativo',    'Perenne'  );
+
+-- Tipos para Fabaceae
+INSERT INTO TipoPlanta VALUES (  3, 'Herbácea leguminosa',          'Plantas con vaina, fijadoras de nitrógeno',            'Agrícola',      'Anual'    );
+INSERT INTO TipoPlanta VALUES (  4, 'Trepadora leguminosa',         'Trepadoras como el frijol o la glicinia',              'Alimentario',   'Anual'    );
+INSERT INTO TipoPlanta VALUES (  5, 'Arbusto leguminoso',           'Arbustos fijadores de nitrógeno',                      'Medicinal',     'Perenne'  );
+
+-- Tipos para Asteraceae
+INSERT INTO TipoPlanta VALUES (  6, 'Hierba compuesta',             'Plantas con capítulos florales',                       'Ornamental',    'Anual'    );
+INSERT INTO TipoPlanta VALUES (  7, 'Planta de hoja ancha',         'Grandes hojas y flores amarillas',                     'Medicinal',     'Anual'    );
+
+-- Tipos para Lamiaceae
+INSERT INTO TipoPlanta VALUES (  8, 'Aromática culinaria',          'Plantas como albahaca o romero',                       'Culinario',     'Perenne');
+INSERT INTO TipoPlanta VALUES (  9, 'Herbácea aromática',           'Usadas en infusiones y aceites esenciales',            'Medicinal',     'Perenne');
+
+-- Tipos para Poaceae
+INSERT INTO TipoPlanta VALUES ( 10, 'Cereal anual',                 'Granos como trigo o maíz',                             'Alimentario',   'Anual');
+INSERT INTO TipoPlanta VALUES ( 11, 'Pasto ornamental',             'Hierbas decorativas para jardines',                    'Decorativo',    'Perenne');
+INSERT INTO TipoPlanta VALUES ( 12, 'Césped',                       'Usado en campos deportivos y jardines',                'Recreativo',    'Perenne');
+
+-- Tipos para Solanaceae
+INSERT INTO TipoPlanta VALUES ( 13, 'Hortaliza solanácea',          'Ej. tomate, berenjena',                                'Alimentario',   'Anual');
+INSERT INTO TipoPlanta VALUES ( 14, 'Planta medicinal solanácea',   'Con alcaloides activos',                               'Medicinal',     'Anual');
+
+-- Tipos para Apiaceae
+INSERT INTO TipoPlanta VALUES ( 15, 'Umbelífera comestible',        'Ej. zanahoria, apio',                                  'Alimentario',   'Bianual');
+INSERT INTO TipoPlanta VALUES ( 16, 'Umbelífera aromática',         'Ej. perejil, eneldo',                                  'Culinario',     'Anual');
+
+-- Tipos para Brassicaceae
+INSERT INTO TipoPlanta VALUES ( 17, 'Crucífera hortícola',          'Ej. col, brócoli, mostaza',                            'Alimentario',   'Anual');
+INSERT INTO TipoPlanta VALUES ( 18, 'Planta de flor crucífera',     'Flores de 4 pétalos',                                  'Ornamental',    'Anual');
+
+-- Tipos para Cactaceae
+INSERT INTO TipoPlanta VALUES ( 19, 'Cactus columnares',            'Altos, crecen en vertical',                            'Decorativo',    'Perenne');
+INSERT INTO TipoPlanta VALUES ( 20, 'Cactus globosos',              'De forma esférica',                                    'Decorativo',    'Perenne');
+INSERT INTO TipoPlanta VALUES ( 21, 'Suculentas compactas',         'Pequeños cactus ornamentales',                         'Coleccionismo', 'Perenne');
+
+-- Tipos para Orchidaceae
+INSERT INTO TipoPlanta VALUES ( 22, 'Orquídea epífita',             'Crece sobre otras plantas',                            'Ornamental',    'Perenne');
+INSERT INTO TipoPlanta VALUES ( 23, 'Orquídea terrestre',           'Crecen en suelo, menos comunes',                       'Ornamental',    'Perenne');
+--------------------------------------------------------------
+-- 2.3. Tabla Jardinero
+--
+-- Esta tabla almacena los datos del personal responsable del cuidado 
+-- y mantenimiento de las plantas. Incluye tanto información personal 
+-- como de contacto y otros datos relevantes como su especialidad o 
+-- apodo. Esta información permite identificar a cada jardinero y 
+-- asignarle plantas de forma adecuada.
+--
+-- idJardinero     Identificador único del jardinero.
+-- nombre          Nombre de pila del jardinero.
+-- apellidos       Apellidos del jardinero.
+-- apodo           Nombre o sobrenombre opcional del jardinero (ej. "El verde").
+-- email           Correo electrónico de contacto.
+-- telefono        Número de teléfono de contacto.
+-- direccion       Dirección del jardinero (puede ser laboral o residencial).
+-- especialidad    Campo o tipo de plantas en las que se especializa (ej. "Ornamentales").
+--------------------------------------------------------------
+
+
+INSERT INTO Jardinero VALUES (  1, 'Fulgencia',   'Fernández Pérez', 'Lu',       'luciafp@gmail.com',           '612345678', 'Calle Magnolia 12, Lugo',       'Ornamentales'        );
+INSERT INTO Jardinero VALUES (  2, 'Fulgencio',   'Ramírez Soto',    'El Verde', 'carlos.ramirez@jardines.com', '622334455', 'Av. del Bosque 5, Vigo',        'Plantas tropicales'  );
+INSERT INTO Jardinero VALUES (  3, 'Pancracia',   'López García',    NULL,       'ana.lopez@gmail.com',         '698765432', 'Rúa das Camelias 23, A Coruña', 'Aromáticas'          );
+INSERT INTO Jardinero VALUES (  4, 'Pancracio',   'Gómez Martínez',  'Mac',      'macgomez@hotmail.com',        '643211000', 'Calle del Pino 3, Ourense',     'Cactus y suculentas' );
+INSERT INTO Jardinero VALUES (  5, 'Guillermina', 'Nogueira Silva',  'Pat',      'pat.nogueira@gmail.com',      '677112233', 'Rua dos Xardíns 8, Pontevedra', 'Orquídeas'           );
+INSERT INTO Jardinero VALUES (  6, 'Guillermino', 'Rey Vázquez',     NULL,       'jrey@plantas.com',            '600123456', 'Av. das Flores 45, Santiago',   'Hortícolas'          );
+INSERT INTO Jardinero VALUES (  7, 'Agradecida',  'Torres Blanco',   'Isa',      'isatorres@vivero.es',         '699998877', 'Camino Verde 11, Ferrol',       'Medicinales'         );
+INSERT INTO Jardinero VALUES (  8, 'Agradecido',  'Barreiro López',  'Miki',     'mbarreiro@gmail.com',         '622556677', 'Travesía da Terra 4, Lugo',     'Gramineas'           );
+INSERT INTO Jardinero VALUES (  9, 'Filomena',    'Ruiz Díaz',       NULL,       'carmen.rd@hotmail.com',       '688332211', 'Praza das Plantas, Ourense',    'Plantas acuáticas'   );
+INSERT INTO Jardinero VALUES ( 10, 'Filomeno',    'Castro Ríos',     'Dani',     'danielcastro@correo.com',     '601234567', 'Rua Nova 7, Pontevedra',        'Árboles frutales'    );
+
+--------------------------------------------------------------
+-- 2.4. Tabla Cuidados
+--
+-- Esta tabla almacena la información relacionada con las necesidades 
+-- de mantenimiento de las plantas. Cada registro describe un conjunto 
+-- de cuidados que pueden aplicarse a una o varias especies. Incluye 
+-- aspectos clave como la frecuencia de riego, la exposición solar y 
+-- el tipo de suelo. Además, se registran condiciones de temperatura 
+-- ideal y requerimientos de poda.
+--
+-- 	idCuidados         Identificador único del conjunto de cuidados.
+-- 	frecuenciaRiego    Frecuencia recomendada de riego (ej. "Diario", "Semanal").
+-- 	exposicionSolar    Nivel de luz solar requerido (ej. "Pleno sol", "Sombra parcial").
+-- 	tipoSuelo          Tipo de suelo ideal (ej. "Arenoso", "Arcilloso", "Ácido").
+-- 	temperaturaIdeal   Rango o temperatura recomendada (ej. "15-25Â°C").
+-- 	podaRecomendada    Indicación sobre si se recomienda poda (ej. "Anual", "Mensual").
+--------------------------------------------------------------
+
+
+INSERT INTO Cuidados VALUES (  1, 'Diario', 'Pleno sol', 'Arenoso', '20-30ºC', 'Mensual');
+INSERT INTO Cuidados VALUES (  2, 'Semanal', 'Sombra parcial', 'Arcilloso', '15-25ºC', 'Anual');
+INSERT INTO Cuidados VALUES (  3, 'Cada 3 días', 'Pleno sol', 'Franco', '18-28ºC', 'Bimensual');
+INSERT INTO Cuidados VALUES (  4, 'Quincenal', 'Sombra total', 'Ácido', '10-20ºC', 'Ninguna');
+INSERT INTO Cuidados VALUES (  5, 'Diario', 'Pleno sol', 'Calcáreo', '25-35ºC', 'Mensual');
+INSERT INTO Cuidados VALUES (  6, 'Semanal', 'Mixta', 'Humífero', '16-22ºC', 'Trimestral');
+INSERT INTO Cuidados VALUES (  7, 'Cada 2 días', 'Sombra parcial', 'Arenoso', '12-18ºC', 'Anual');
+INSERT INTO Cuidados VALUES (  8, 'Semanal', 'Pleno sol', 'Arcilloso', '20-30ºC', 'Mensual');
+INSERT INTO Cuidados VALUES (  9, 'Cada 4 días', 'Pleno sol', 'Franco-arenoso', '22-28ºC', 'Mensual');
+INSERT INTO Cuidados VALUES ( 10, 'Diario', 'Sombra parcial', 'Turboso', '15-20ºC', 'Semestral');
+--------------------------------------------------------------
+-- 2.5. Tabla Habitat
+--
+-- Almacena información sobre los diferentes tipos de hábitats
+-- en los que pueden encontrarse las plantas. Incluye datos sobre 
+-- el clima, altitud, ubicación y condiciones específicas del entorno.
+-- Esta tabla permite asociar cada planta con uno o varios hábitats
+-- mediante la tabla intermedia PlantaHabitat.
+--
+-- 	idHabitat           Identificador único del hábitat.
+-- 	nombreHabitat       Nombre descriptivo del hábitat (ej. "Bosque tropical").
+-- 	climaPredominante   Tipo de clima que predomina en el hábitat (ej. "Tropical", "Árido").
+-- 	altitud             Rango de altitud característico (ej. "1000-2000 msnm").
+-- 	ubicacionGeografica Área o región donde se encuentra el hábitat (ej. "Andes peruanos").
+-- 	tipoVegetacion      Tipo de vegetación predominante (ej. "Selva", "Matorral").
+--------------------------------------------------------------
+
+
+INSERT INTO Habitat VALUES (  1, 'Bosque templado', 'Templado', '500-1500 msnm', 'Galicia', 'Bosque mixto');
+INSERT INTO Habitat VALUES (  2, 'Selva tropical', 'Tropical', '0-800 msnm', 'Amazonas', 'Selva densa');
+INSERT INTO Habitat VALUES (  3, 'Pradera húmeda', 'Templado húmedo', '200-1000 msnm', 'Castilla y León', 'Pastizal');
+INSERT INTO Habitat VALUES (  4, 'Zona desértica', 'Árido', '100-1200 msnm', 'México norte', 'Xerófila');
+INSERT INTO Habitat VALUES (  5, 'Montaña alpina', 'Frío', '1500-3000 msnm', 'Pirineos', 'Matorral alpino');
+INSERT INTO Habitat VALUES (  6, 'Jardín urbano', 'Templado', '0-100 msnm', 'Madrid', 'Vegetación ornamental');
+INSERT INTO Habitat VALUES (  7, 'Humedal costero', 'Húmedo', '0-50 msnm', 'Doñana', 'Vegetación acuática');
+INSERT INTO Habitat VALUES (  8, 'Cultivo agrícola', 'Templado cálido', '0-500 msnm', 'Andalucía', 'Monocultivo');
+INSERT INTO Habitat VALUES (  9, 'Bosque mediterráneo', 'Mediterráneo', '200-800 msnm', 'Levante español', 'Pinar bajo');
+INSERT INTO Habitat VALUES ( 10, 'Selva montañosa', 'Tropical húmedo', '800-2000 msnm', 'Andes', 'Bosque nuboso');
+
+--------------------------------------------------------------
+-- 2.6. Tabla Planta
+--
+-- Esta tabla contiene información detallada sobre las plantas,
+-- incluyendo su nombre científico y común, su clasificación 
+-- botánica y tipo, así como características físicas y biológicas.
+-- Se relaciona con las tablas FamiliaBotanica y TipoPlanta para 
+-- mantener una estructura taxonómica coherente.
+--
+-- 	idPlanta             Identificador único de la planta.
+-- 	nombreCientifico     Nombre científico de la planta (ej. "Solanum lycopersicum").
+-- 	nombreComun          Nombre común de la planta (ej. "Tomate").
+-- 	Familia              Clave foránea que refiere a la familia botánica a la que pertenece.
+-- 	Tipo                 Clave foránea que refiere al tipo de planta.
+-- 	alturaPromedio       Altura promedio que alcanza la planta (en metros).
+-- 	colorFlores          Color típico de las flores de la planta.
+-- 	periodoFloracion     Periodo o época del aÃ±o en la que la planta florece.
+-- 	usosPrincipales      Aplicaciones comunes (ej. "Alimentario", "Medicinal", "Ornamental").
+-- 	esComestible         Indica si la planta es comestible ("Sí" o "No").
+--------------------------------------------------------------
+
+
+-- Familia 1: Rosaceae â†’ tipos 1 y 2
+INSERT INTO Planta VALUES (  1, 'Rosa rubiginosa', 'Rosa silvestre', 1, 1, 1.2, 'Rosa', 'Primavera', 'Ornamental, Medicinal', 'No');
+INSERT INTO Planta VALUES (  2, 'Rosa multiflora', 'Rosal trepador', 1, 2, 3.5, 'Rosa', 'Verano', 'Decorativo', 'No');
+
+-- Familia 2: Fabaceae â†’ tipos 3, 4, 5
+INSERT INTO Planta VALUES (  3, 'Phaseolus vulgaris', 'Frijol', 2, 3, 0.5, 'Blanca', 'Verano', 'Alimentario', 'Si');
+INSERT INTO Planta VALUES (  4, 'Glycine max', 'Soya', 2, 4, 0.7, 'Morada', 'Primavera', 'Agrícola, Alimentario', 'Si');
+INSERT INTO Planta VALUES (  5, 'Sesbania grandiflora', 'Hummingbird tree', 2, 5, 5.0, 'Roja', 'Verano', 'Ornamental, Medicinal', 'Si');
+
+-- Familia 3: Asteraceae â†’ tipos 6, 7
+INSERT INTO Planta VALUES (  6, 'Helianthus annuus', 'Girasol', 3, 6, 2.0, 'Amarilla', 'Verano', 'Aceite, Ornamental', 'Si');
+INSERT INTO Planta VALUES (  7, 'Bellis perennis', 'Margarita', 3, 7, 0.2, 'Blanca', 'Primavera', 'Decorativo', 'No');
+
+-- Familia 4: Lamiaceae â†’ tipos 8, 9
+INSERT INTO Planta VALUES (  8, 'Ocimum basilicum', 'Albahaca', 4, 8, 0.4, 'Blanca', 'Verano', 'Culinario', 'Si');
+INSERT INTO Planta VALUES (  9, 'Rosmarinus officinalis', 'Romero', 4, 9, 1.0, 'Azul', 'Primavera', 'Aromática, Medicinal', 'Si');
+
+-- Familia 5: Poaceae â†’ tipos 10, 11, 12
+INSERT INTO Planta VALUES ( 10, 'Triticum aestivum', 'Trigo', 5, 10, 1.2, 'Verde', 'Primavera', 'Alimentario', 'Si');
+INSERT INTO Planta VALUES ( 11, 'Festuca arundinacea', 'Pasto alto', 5, 11, 0.5, 'Verde', 'Primavera', 'Ornamental', 'No');
+INSERT INTO Planta VALUES ( 12, 'Lolium perenne', 'Césped inglés', 5, 12, 0.3, 'Verde', 'Verano', 'Recreativo', 'No');
+
+-- Familia 6: Solanaceae â†’ tipos 13, 14
+INSERT INTO Planta VALUES ( 13, 'Solanum lycopersicum', 'Tomate', 6, 13, 1.5, 'Amarilla', 'Primavera', 'Alimentario', 'Si');
+INSERT INTO Planta VALUES ( 14, 'Atropa belladonna', 'Belladona', 6, 14, 1.2, 'Violeta', 'Verano', 'Medicinal, Tóxica', 'No');
+
+-- Familia 7: Apiaceae â†’ tipos 15, 16
+INSERT INTO Planta VALUES ( 15, 'Daucus carota', 'Zanahoria', 7, 15, 0.3, 'Blanca', 'Primavera', 'Alimentario', 'Si');
+INSERT INTO Planta VALUES ( 16, 'Petroselinum crispum', 'Perejil', 7, 16, 0.4, 'Verde', 'Primavera', 'Culinario', 'Si');
+
+-- Familia 8: Brassicaceae â†’ tipos 17, 18
+INSERT INTO Planta VALUES ( 17, 'Brassica oleracea', 'Col rizada', 8, 17, 0.8, 'Amarilla', 'Otoño', 'Alimentario', 'Si');
+INSERT INTO Planta VALUES ( 18, 'Erysimum cheiri', 'Alhelí', 8, 18, 0.6, 'Naranja', 'Primavera', 'Ornamental', 'No');
+
+-- Familia 9: Cactaceae â†’ tipos 19, 20, 21
+INSERT INTO Planta VALUES ( 19, 'Carnegiea gigantea', 'Sahuaro', 9, 19, 10.0, 'Blanca', 'Primavera', 'Decorativo', 'No');
+INSERT INTO Planta VALUES ( 20, 'Echinocactus grusonii', 'Asiento de suegra', 9, 20, 0.4, 'Amarilla', 'Verano', 'Ornamental', 'No');
+INSERT INTO Planta VALUES ( 21, 'Mammillaria elongata', 'Dedos de oro', 9, 21, 0.2, 'Amarilla', 'Primavera', 'Coleccionismo', 'No');
+
+-- Familia 10: Orchidaceae â†’ tipos 22, 23
+INSERT INTO Planta VALUES ( 22, 'Phalaenopsis amabilis', 'Orquídea mariposa', 10, 22, 0.5, 'Blanca', 'Primavera', 'Ornamental', 'No');
+INSERT INTO Planta VALUES ( 23, 'Bletilla striata', 'Orquídea terrestre china', 10, 23, 0.6, 'Violeta', 'Verano', 'Ornamental', 'No');
+
+--------------------------------------------------------------
+-- 2.7. Tabla PlantaHabitat
+--
+-- Relaciona las plantas con los hábitats en los que pueden encontrarse. 
+-- Permite una relación muchos a muchos entre plantas y hábitats, es decir, 
+-- una planta puede habitar múltiples entornos y un hábitat puede contener 
+-- múltiples especies vegetales. También se pueden registrar atributos de 
+-- contexto como la abundancia y observaciones específicas.
+--
+-- 	idPlanta        Identificador de la planta (referencia a la tabla Planta).
+-- 	idHabitat       Identificador del hábitat (referencia a la tabla Habitat).
+-- 	abundancia      Nivel de presencia de la planta en ese hábitat (ej. "Alta", "Moderada").
+-- 	observaciones   Notas adicionales u observaciones sobre la relación específica.
+--------------------------------------------------------------
+
+
+-- Rosaceae
+INSERT INTO PlantaHabitat VALUES (1, 1, 'Alta', 'Común en zonas templadas y jardines rurales');
+INSERT INTO PlantaHabitat VALUES (2, 6, 'Alta', 'Trepadora decorativa en muros de jardines');
+
+-- Fabaceae
+INSERT INTO PlantaHabitat VALUES (3, 8, 'Alta', 'Cultivada ampliamente en zonas agrícolas');
+INSERT INTO PlantaHabitat VALUES (4, 8, 'Alta', 'Soya crece en regiones cálidas agrícolas');
+INSERT INTO PlantaHabitat VALUES (5, 1, 'Moderada', 'Crece también de forma silvestre');
+
+-- Asteraceae
+INSERT INTO PlantaHabitat VALUES (6, 8, 'Alta', 'Girasol adaptado a cultivos de sol pleno');
+INSERT INTO PlantaHabitat VALUES (7, 6, 'Alta', 'Común en jardines urbanos');
+
+-- Lamiaceae
+INSERT INTO PlantaHabitat VALUES (8, 6, 'Alta', 'Planta de maceta o jardines aromáticos');
+INSERT INTO PlantaHabitat VALUES (9, 9, 'Moderada', 'Resistente a climas secos mediterráneos');
+
+-- Poaceae
+INSERT INTO PlantaHabitat VALUES (10, 8, 'Alta', 'Cultivado como cereal');
+INSERT INTO PlantaHabitat VALUES (11, 3, 'Alta', 'Pasto decorativo en zonas verdes');
+INSERT INTO PlantaHabitat VALUES (12, 6, 'Alta', 'Césped típico de uso urbano');
+
+-- Solanaceae
+INSERT INTO PlantaHabitat VALUES (13, 8, 'Alta', 'Cultivado extensamente');
+INSERT INTO PlantaHabitat VALUES (14, 2, 'Baja', 'Crece en zonas silvestres tropicales');
+
+-- Apiaceae
+INSERT INTO PlantaHabitat VALUES (15, 8, 'Alta', 'Zanahoria como cultivo');
+INSERT INTO PlantaHabitat VALUES (16, 6, 'Alta', 'Perejil en huertos caseros');
+
+-- Brassicaceae
+INSERT INTO PlantaHabitat VALUES (17, 8, 'Alta', 'Col cultivada en climas frescos');
+INSERT INTO PlantaHabitat VALUES (18, 6, 'Moderada', 'Alhelí ornamental urbano');
+
+-- Cactaceae
+INSERT INTO PlantaHabitat VALUES (19, 4, 'Alta', 'Crecimiento natural en climas áridos');
+INSERT INTO PlantaHabitat VALUES (20, 4, 'Alta', 'Cactus decorativo de zonas secas');
+INSERT INTO PlantaHabitat VALUES (21, 4, 'Alta', 'Suculentas adaptadas a poca agua');
+
+-- Orchidaceae
+INSERT INTO PlantaHabitat VALUES (22, 10, 'Alta', 'Epífita en bosques tropicales húmedos');
+INSERT INTO PlantaHabitat VALUES (23, 10, 'Alta', 'Habita selvas montañosas húmedas');
+
+--------------------------------------------------------------
+-- 2.8. Tabla PlantaCuidados
+--
+-- Esta tabla intermedia relaciona las plantas con sus rutinas de cuidado. 
+-- Permite asignar un conjunto de cuidados específicos a cada planta, junto 
+-- con la fecha en que estos cuidados fueron asignados. Es útil para llevar 
+-- un seguimiento personalizado del mantenimiento de cada especie.
+--
+-- 	idPlanta         Identificador de la planta (clave foránea a Planta).
+-- 	idCuidados       Identificador de los cuidados asignados (clave foránea a Cuidados).
+-- 	fechaAsignacion  Fecha en que se asignó ese cuidado a la planta.
+-- 	observaciones    Comentarios adicionales sobre el estado o ajustes en el cuidado.
+--------------------------------------------------------------
+
+
+-- Plantas ornamentales
+INSERT INTO PlantaCuidados VALUES (1, 2, TO_DATE('2024-04-01', 'YYYY-MM-DD'), 'Requiere sombra parcial y riego moderado');
+INSERT INTO PlantaCuidados VALUES (2, 3, TO_DATE('2024-04-03', 'YYYY-MM-DD'), 'Riego cada 3 días por su crecimiento vertical');
+
+-- Leguminosas (alimentarias)
+INSERT INTO PlantaCuidados VALUES (3, 1, TO_DATE('2024-04-05', 'YYYY-MM-DD'), 'Frijol con exposición directa y riego diario');
+INSERT INTO PlantaCuidados VALUES (5, 6, TO_DATE('2024-04-08', 'YYYY-MM-DD'), 'Mantenimiento periódico para floración');
+
+-- Girasol y margarita
+INSERT INTO PlantaCuidados VALUES (6, 1, TO_DATE('2024-04-02', 'YYYY-MM-DD'), 'Necesita pleno sol y suelo arenoso');
+INSERT INTO PlantaCuidados VALUES (7, 2, TO_DATE('2024-04-04', 'YYYY-MM-DD'), 'Margarita sensible al exceso de humedad');
+
+-- Aromáticas
+INSERT INTO PlantaCuidados VALUES (8, 7, TO_DATE('2024-04-09', 'YYYY-MM-DD'), 'Albahaca requiere sombra parcial y riego frecuente');
+INSERT INTO PlantaCuidados VALUES (9, 3, TO_DATE('2024-04-10', 'YYYY-MM-DD'), 'Romero con exposición directa');
+
+-- Cereales y gramíneas
+INSERT INTO PlantaCuidados VALUES (10, 8, TO_DATE('2024-04-11', 'YYYY-MM-DD'), 'Trigo con suelo arcilloso y exposición total');
+INSERT INTO PlantaCuidados VALUES (11, 9, TO_DATE('2024-04-12', 'YYYY-MM-DD'), 'Pasto ornamental, mantenimiento mensual');
+INSERT INTO PlantaCuidados VALUES (12, 6, TO_DATE('2024-04-13', 'YYYY-MM-DD'), 'Césped resistente, cuidados cada semana');
+
+-- Solanáceas
+INSERT INTO PlantaCuidados VALUES (13, 1, TO_DATE('2024-04-14', 'YYYY-MM-DD'), 'Tomate con alta demanda de riego');
+INSERT INTO PlantaCuidados VALUES (14, 4, TO_DATE('2024-04-15', 'YYYY-MM-DD'), 'Belladona necesita sombra total y poda ocasional');
+
+-- Crucíferas y cactus
+INSERT INTO PlantaCuidados VALUES (17, 5, TO_DATE('2024-04-16', 'YYYY-MM-DD'), 'Col rizada necesita riego frecuente');
+INSERT INTO PlantaCuidados VALUES (19, 4, TO_DATE('2024-04-17', 'YYYY-MM-DD'), 'Cactus con mínimo riego y pleno sol');
+INSERT INTO PlantaCuidados VALUES (20, 10, TO_DATE('2024-04-18', 'YYYY-MM-DD'), 'Poda solo si necesario');
+
+-- Orquídeas
+INSERT INTO PlantaCuidados VALUES (22, 2, TO_DATE('2024-04-19', 'YYYY-MM-DD'), 'Orquídea con sombra parcial y humedad constante');
+INSERT INTO PlantaCuidados VALUES (23, 7, TO_DATE('2024-04-20', 'YYYY-MM-DD'), 'Cuidado delicado, evitar luz directa');
+
+--------------------------------------------------------------
+-- 2.9. Tabla JardineroPlanta
+--
+-- Esta tabla intermedia representa la relación entre los jardineros 
+-- y las plantas que han plantado o están a su cargo. 
+-- Se incluyen detalles importantes como la fecha de plantación, 
+-- el estado actual de la planta, y observaciones específicas sobre su desarrollo.
+--
+-- idJardinero       Identificador del jardinero (clave foránea a Jardinero).
+-- idPlanta          Identificador de la planta (clave foránea a Planta).
+-- fechaPlantacion   Fecha en que el jardinero realizó la plantación.
+-- estadoActual      Estado actual de la planta según el jardinero (ej. "Creciendo", "Marchita").
+-- observaciones     Comentarios adicionales sobre la evolución o cuidado de la planta.
+--------------------------------------------------------------
+
+
+INSERT INTO JardineroPlanta VALUES (1, 1, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'Creciendo', 'Buena floración inicial');
+INSERT INTO JardineroPlanta VALUES (1, 2, TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'Floración', 'Rosal adaptado al jardín urbano');
+INSERT INTO JardineroPlanta VALUES (1, 3, TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'Creciendo', 'Frijol vigoroso');
+INSERT INTO JardineroPlanta VALUES (1, 4, TO_DATE('2024-03-04', 'YYYY-MM-DD'), 'Creciendo', 'Soya en fase inicial');
+INSERT INTO JardineroPlanta VALUES (1, 5, TO_DATE('2024-03-05', 'YYYY-MM-DD'), 'Estable', 'Hummingbird tree adaptado al clima');
+INSERT INTO JardineroPlanta VALUES (2, 6, TO_DATE('2024-03-06', 'YYYY-MM-DD'), 'Floración', 'Girasol con buen crecimiento');
+INSERT INTO JardineroPlanta VALUES (2, 7, TO_DATE('2024-03-07', 'YYYY-MM-DD'), 'Estable', 'Margarita perenne');
+INSERT INTO JardineroPlanta VALUES (2, 8, TO_DATE('2024-03-08', 'YYYY-MM-DD'), 'Creciendo', 'Albahaca con riego frecuente');
+INSERT INTO JardineroPlanta VALUES (2, 9, TO_DATE('2024-03-09', 'YYYY-MM-DD'), 'Creciendo', 'Romero enraizado');
+INSERT INTO JardineroPlanta VALUES (2, 10, TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'Floración', 'Trigo en fase de espiga');
+INSERT INTO JardineroPlanta VALUES (2, 11, TO_DATE('2024-03-11', 'YYYY-MM-DD'), 'Estable', 'Pasto resistente');
+INSERT INTO JardineroPlanta VALUES (3, 12, TO_DATE('2024-03-12', 'YYYY-MM-DD'), 'Creciendo', 'Césped recién sembrado');
+INSERT INTO JardineroPlanta VALUES (3, 13, TO_DATE('2024-03-13', 'YYYY-MM-DD'), 'Creciendo', 'Tomate con flor');
+INSERT INTO JardineroPlanta VALUES (3, 14, TO_DATE('2024-03-14', 'YYYY-MM-DD'), 'Estable', 'Belladona bajo control');
+INSERT INTO JardineroPlanta VALUES (3, 15, TO_DATE('2024-03-15', 'YYYY-MM-DD'), 'Creciendo', 'Zanahoria brotando');
+INSERT INTO JardineroPlanta VALUES (4, 16, TO_DATE('2024-03-16', 'YYYY-MM-DD'), 'Creciendo', 'Perejil aromático');
+INSERT INTO JardineroPlanta VALUES (4, 17, TO_DATE('2024-03-17', 'YYYY-MM-DD'), 'Floración', 'Col en maduración');
+INSERT INTO JardineroPlanta VALUES (4, 18, TO_DATE('2024-03-18', 'YYYY-MM-DD'), 'Creciendo', 'Alhelí con buen color');
+INSERT INTO JardineroPlanta VALUES (4, 19, TO_DATE('2024-03-19', 'YYYY-MM-DD'), 'Estable', 'Sahuaro bien adaptado');
+INSERT INTO JardineroPlanta VALUES (4, 20, TO_DATE('2024-03-20', 'YYYY-MM-DD'), 'Floración', 'Cactus en floración');
+INSERT INTO JardineroPlanta VALUES (4, 21, TO_DATE('2024-03-21', 'YYYY-MM-DD'), 'Creciendo', 'Suculenta con buen riego');
+INSERT INTO JardineroPlanta VALUES (4, 22, TO_DATE('2024-03-22', 'YYYY-MM-DD'), 'Marchita', 'Planta con problemas de raíz');
+INSERT INTO JardineroPlanta VALUES (5, 1, TO_DATE('2024-03-23', 'YYYY-MM-DD'), 'Estable', 'Rosal mantenido en flor');
+INSERT INTO JardineroPlanta VALUES (5, 3, TO_DATE('2024-03-24', 'YYYY-MM-DD'), 'Creciendo', 'Frijol sin plagas');
+INSERT INTO JardineroPlanta VALUES (5, 6, TO_DATE('2024-03-25', 'YYYY-MM-DD'), 'Floración', 'Girasol en pleno crecimiento');
+INSERT INTO JardineroPlanta VALUES (5, 8, TO_DATE('2024-03-26', 'YYYY-MM-DD'), 'Estable', 'Albahaca lista para cosecha');
+INSERT INTO JardineroPlanta VALUES (5, 10, TO_DATE('2024-03-27', 'YYYY-MM-DD'), 'Floración', 'Trigo saludable');
+INSERT INTO JardineroPlanta VALUES (6, 2, TO_DATE('2024-03-28', 'YYYY-MM-DD'), 'Creciendo', 'Rosal trepador guiado');
+INSERT INTO JardineroPlanta VALUES (6, 4, TO_DATE('2024-03-29', 'YYYY-MM-DD'), 'Estable', 'Soya desarrollándose');
+INSERT INTO JardineroPlanta VALUES (6, 5, TO_DATE('2024-03-30', 'YYYY-MM-DD'), 'Creciendo', 'Árbol enraizando');
+INSERT INTO JardineroPlanta VALUES (6, 7, TO_DATE('2024-03-31', 'YYYY-MM-DD'), 'Floración', 'Margarita en flor');
+INSERT INTO JardineroPlanta VALUES (6, 9, TO_DATE('2024-04-01', 'YYYY-MM-DD'), 'Creciendo', 'Romero con buen aroma');
+INSERT INTO JardineroPlanta VALUES (6, 11, TO_DATE('2024-04-02', 'YYYY-MM-DD'), 'Estable', 'Pasto compacto');
+INSERT INTO JardineroPlanta VALUES (7, 12, TO_DATE('2024-04-03', 'YYYY-MM-DD'), 'Creciendo', 'Césped recién cortado');
+INSERT INTO JardineroPlanta VALUES (7, 14, TO_DATE('2024-04-04', 'YYYY-MM-DD'), 'Marchita', 'Belladona con daños');
+INSERT INTO JardineroPlanta VALUES (7, 15, TO_DATE('2024-04-05', 'YYYY-MM-DD'), 'Floración', 'Zanahoria lista para cosecha');
+INSERT INTO JardineroPlanta VALUES (7, 16, TO_DATE('2024-04-06', 'YYYY-MM-DD'), 'Estable', 'Perejil frondoso');
+INSERT INTO JardineroPlanta VALUES (7, 17, TO_DATE('2024-04-07', 'YYYY-MM-DD'), 'Creciendo', 'Col en fase media');
+INSERT INTO JardineroPlanta VALUES (8, 18, TO_DATE('2024-04-08', 'YYYY-MM-DD'), 'Floración', 'Alhelí colorido');
+INSERT INTO JardineroPlanta VALUES (8, 19, TO_DATE('2024-04-09', 'YYYY-MM-DD'), 'Creciendo', 'Cactus columnares fuertes');
+INSERT INTO JardineroPlanta VALUES (8, 20, TO_DATE('2024-04-10', 'YYYY-MM-DD'), 'Estable', 'Cactus redondo sin riego excesivo');
+INSERT INTO JardineroPlanta VALUES (8, 21, TO_DATE('2024-04-11', 'YYYY-MM-DD'), 'Creciendo', 'Suculenta brotando');
+INSERT INTO JardineroPlanta VALUES (8, 22, TO_DATE('2024-04-12', 'YYYY-MM-DD'), 'Marchita', 'Problemas por exceso de agua');
+INSERT INTO JardineroPlanta VALUES (8, 23, TO_DATE('2024-04-13', 'YYYY-MM-DD'), 'Estable', 'Nueva especie de prueba');
+INSERT INTO JardineroPlanta VALUES (9, 22, TO_DATE('2024-04-14', 'YYYY-MM-DD'), 'Floración', 'Orquídea mariposa floreciendo');
+INSERT INTO JardineroPlanta VALUES (9, 23, TO_DATE('2024-04-15', 'YYYY-MM-DD'), 'Creciendo', 'Orquídea terrestre creciendo');
+INSERT INTO JardineroPlanta VALUES (9, 5, TO_DATE('2024-04-16', 'YYYY-MM-DD'), 'Estable', 'Arbusto en jardín húmedo');
+INSERT INTO JardineroPlanta VALUES (9, 6, TO_DATE('2024-04-17', 'YYYY-MM-DD'), 'Floración', 'Girasol listo para polinización');
+INSERT INTO JardineroPlanta VALUES (10, 1, TO_DATE('2024-04-18', 'YYYY-MM-DD'), 'Creciendo', 'Rosal controlado con tutorado');
+INSERT INTO JardineroPlanta VALUES (10, 2, TO_DATE('2024-04-19', 'YYYY-MM-DD'), 'Estable', 'Rosal trepador en flor');
+INSERT INTO JardineroPlanta VALUES (10, 3, TO_DATE('2024-04-20', 'YYYY-MM-DD'), 'Floración', 'Frijol con vaina visible');
+INSERT INTO JardineroPlanta VALUES (10, 8, TO_DATE('2024-04-21', 'YYYY-MM-DD'), 'Creciendo', 'Albahaca en crecimiento rápido');
+INSERT INTO JardineroPlanta VALUES (10, 13, TO_DATE('2024-04-22', 'YYYY-MM-DD'), 'Estable', 'Tomate floreciendo');
+INSERT INTO JardineroPlanta VALUES (10, 14, TO_DATE('2024-04-22', 'YYYY-MM-DD'), 'Marchita', 'Belladona con sombra insuficiente');
+--------------------------------------------------------------
+--------------------------------------------------------------

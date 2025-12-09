@@ -1,0 +1,196 @@
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN Y USO DE LA BASE DE DATOS 'ZooTEIS'
+-- ------------------------------------------------------------------------------------------
+	DROP DATABASE IF EXISTS zoo_teis;
+	CREATE DATABASE 		zoo_teis
+				character set	utf32
+				collate			utf32_spanish2_ci;
+ 	USE 			zoo_teis;
+
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA ESPECIE
+
+--      idEspecie               valor numérico de 4 dígitos
+--      NombreCientifico        cadena de texto de  50 caracteres, no nulo
+--      NombreEspañol           cadena de texto de  50 caracteres, no nulo
+--      Descripcion             cadena de texto de 200 caracteres, no nula
+--      EdadPromedio            valor numérico de 3 dígitos, no nulo
+--      PesoPromedio            valor numérico de 3 dígitos y 2 decimales, no nulo
+--      OtrosDatosEspecio       cadena de texto de 200 caracteres
+
+--      Clave primaria          idEspecie
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE especie (
+	id_especie int (4) AUTO_INCREMENT PRIMARY KEY,
+    nombre_cientifico varchar (50) NOT NULL,
+    nombre_espanol varchar (50) NOT NULL,
+    descripcion varchar (200) NOT NULL,
+    edad_promedio int (3) NOT NULL,
+    peso_promedio decimal (3,2) NOT NULL,
+    otros_datos_especie varchar (200)
+);
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA HABITAT
+--
+--      idHabitat              valor numérico de 5 dígitos
+--      NombreHabitat          cadena de texto de  50 caracteres, no nulo
+--      Vegetacion             cadena de texto de 200 caracteres, no nulo
+--      Clima                  cadena de texto de  50 caracteres, no nulo
+--      OtrosDatosHabitat      cadena de texto de 200 caracteres
+--
+--      Clave primaria          idHabitat
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE habitat (
+    id_habitat int (5) AUTO_INCREMENT PRIMARY KEY,
+    nombre_habitat varchar (50) NOT NULL,
+    vegetacion varchar (200) NOT NULL,
+    clima varchar (50) NOT NULL,
+    otros_datos_habitat varchar (200)
+    );
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA GUIA
+--
+--      idGuia                valor numérico de 3 dígitos
+--      NombreGuia            cadena de texto de  30 caracteres, no nulo
+--      ApellidosGuia         cadena de texto de  60 caracteres, no nulo
+--      DireccionGuia         cadena de texto de 200 caracteres, no nulo
+--      TelefonoGuia          cadena de texto de  12 caracteres, no nulo
+--      ContratacionGuia      tipo fecha, no nulo
+--      OtrosDatosGuia        cadena de texto de 200 caracteres
+--
+--      Clave primaria          idGuia
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE guia (
+    id_guia int (3) PRIMARY KEY,
+    nombre_guia varchar (30) NOT NULL,
+    apellidos_guia varchar (60) NOT NULL,
+    direccion_guia varchar (200) NOT NULL,
+    telefono_guia varchar (12) NOT NULL,
+    contratacion_guia date NOT NULL,
+    otros_datos_guia varchar (200)
+    );
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA CUIDADOR
+--
+--      idCuidador            valor numérico de 3 dígitos
+--      NombreCuidador        cadena de texto de  30 caracteres, no nulo
+--      ApellidosCuidador     cadena de texto de  60 caracteres, no nulo
+--      DireccionCuidador     cadena de texto de 200 caracteres, no nulo
+--      TelefonoCuidador      cadena de texto de  12 caracteres, no nulo
+--      ContratacionCuidador  tipo fecha, no nulo
+--      OtrosDatosCuidador    cadena de texto de 200 caracteres
+--
+--      Clave primaria          idCuidador
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE cuidador (
+    id_cuidador int (3) AUTO_INCREMENT PRIMARY KEY,
+    nombre_cuidador varchar (30) NOT NULL,
+    apellidos_cuidador varchar (60) NOT NULL,
+    direccion_cuidador varchar (200) NOT NULL,
+    telefono_cuidador varchar (12) NOT NULL,
+    contratacion_cuidador date NOT NULL,
+    otros_datos_cuidador varchar (200)
+    );
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA ITINERARIO
+--
+--      idItinerario          valor numérico de 3 dígitos
+--      NombreItinerario      cadena de texto de 50 caracteres, no nulo
+--      Guia                  valor numérico de 3 dígitos, clave foránea a la tabla Guia
+--      HoraInicio            tipo timestamp, no nulo
+--      Duracion              valor numérico de 3 dígitos, no nulo
+--      Longitud              valor numérico de 3 dígitos, no nulo
+--      MaxVisitantes         valor numérico de 2 dígitos, no nulo
+--      OtrosDatosItinerario  cadena de texto de 200 caracteres, opcional
+--
+--      Clave primaria          idItinerario
+--		Clave foránea			Guia 			a la tabla Guia
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE itinerario (
+    id_itinerario int (3) AUTO_INCREMENT PRIMARY KEY,
+    nombre_itinerario varchar (50) NOT NULL,
+    guia int (3),
+    hora_inicio timestamp NOT NULL,
+    duracion int (3) NOT NULL,
+    longitud int (3) NOT NULL,
+    max_visitante int (2) NOT NULL,
+    otros_datos_itinerario varchar (200),
+    
+    FOREIGN KEY (guia) REFERENCES guia (id_guia)
+    );
+
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA VIVE
+--
+--      idVive                valor numérico de 4 dígitos
+--      Especie               valor numérico de 4 dígitos, clave foránea a la tabla Especie
+--      Habitat               valor numérico de 5 dígitos, clave foránea a la tabla Habitat
+--      Peligrosidad          valor numérico de 2 dígitos, no nulo
+--      OtrosDatosVive        cadena de texto de 200 caracteres
+--
+--      Clave primaria          idVive
+--		Clave foránea		Especie		a la tabla Especie
+--		Clave foránea		Habitat		a la tabla Habitat
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE vive (
+    id_vive int (4) AUTO_INCREMENT PRIMARY KEY,
+    especie int (4),
+    habitat int (5),
+    peligrosidad int (2) NOT NULL,
+    otros_datos_vive varchar (200),
+    
+    FOREIGN KEY (especie) REFERENCES especie (id_especie),
+    FOREIGN KEY (habitat) REFERENCES habitat (id_habitat)
+    );
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA ATIENDE
+--
+--      idAtiende             valor numérico de 8 dígitos
+--      Especie               valor numérico de 4 dígitos, clave foránea a la tabla Especie
+--      Cuidador              valor numérico de 3 dígitos, clave foránea a la tabla Cuidador
+--      Fecha                 tipo fecha, no nulo
+--      Incidencia            cadena de texto de 200 caracteres, no nulo
+--      OtrosDatosAtencion    cadena de texto de 200 caracteres
+--
+--      Clave primaria          idAtiende
+--		Clave foránea		Especie		a la tabla Especie
+--		Clave foránea		Cuidador	a la tabla Cuidador
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE atiende (
+    id_atiende int (8) AUTO_INCREMENT PRIMARY KEY,
+    especie int (4),
+    cuidador int (3),
+    fecha date NOT NULL,
+    incidencia varchar (200) NOT NULL,
+    otros_datos_atencion varchar (200),
+    
+    FOREIGN KEY (especie) REFERENCES especie (id_especie),
+    FOREIGN KEY (cuidador) REFERENCES cuidador (id_cuidador)
+    );
+-- ------------------------------------------------------------------------------------------
+--	CREACIÓN DE LA TABLA RECORRE
+--
+--      idRecorre             valor numérico de 3 dígitos
+--      Itinerario            valor numérico de 3 dígitos, clave foránea a la tabla Itinerario
+--      Habitat               valor numérico de 5 dígitos, clave foránea a la tabla Habitat
+--      Fecha                 tipo fecha, no nulo
+--      Incidencias           cadena de texto de 200 caracteres
+--      OtrosDatosRecorre     cadena de texto de 200 caracteres
+--
+--      Clave primaria          idRecorre
+--		Clave foránea		Itinerario	a la tabla Itinerario
+--		Clave foránea		Habitat		a la tabla Habitat
+-- ------------------------------------------------------------------------------------------
+CREATE TABLE recorre (
+    id_recorre int (3) AUTO_INCREMENT PRIMARY KEY,
+    itinerario int (3),
+    habitat int (5),
+    fecha date NOT NULL,
+    incidencias varchar (200),
+    otros_datos_recorre varchar (200),
+
+    FOREIGN KEY (itinerario) REFERENCES itinerario (id_itinerario),
+    FOREIGN KEY (habitat) REFERENCES habitat (id_habitat)
+    );
+-- ------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------
