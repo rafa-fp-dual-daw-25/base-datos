@@ -369,6 +369,8 @@ SELECT * FROM Producto ORDER BY Precio ASC;
 
 -- Mostrar productos ordenados por Nombre de la Z a la A
 SELECT * FROM Producto ORDER BY Nombre DESC;
+-- PUEDE SER CON EL NUMERO INDEX DE LA COLUMNA
+-- SELECT * FROM Producto ORDER BY 3 DESC;
 
 -- Mostrar administradores ordenados por Nombre de la A a la Z
 SELECT * FROM Administrador ORDER BY Nombre ASC;
@@ -384,6 +386,9 @@ SELECT * FROM Detalles ORDER BY ID_Venta DESC;
 
 -- Mostrar ventas ordenadas por Fecha de más antigua a más reciente
 SELECT * FROM Venta ORDER BY Fecha ASC;
+
+-- POR CADA USUARIO, MOSTRAR NUMERO DE ENVIOS AGRUPADOS POR ESTADO
+SELECT Estado, count(ID_Envio) AS "Envios" FROM Envio GROUP BY Estado;
 
 -- Mostrar ventas ordenadas por CantidadTotal de mayor a menor
 SELECT * FROM Venta ORDER BY CantidadTotal DESC;
