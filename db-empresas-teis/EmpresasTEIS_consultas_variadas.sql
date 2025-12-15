@@ -224,8 +224,11 @@ SELECT * from detalles;
 -- Sobre 1 tabla
 --------------------------------------------------------------------------------------------------------
 --  1. Obtén el producto más caro.
-
+SELECT MAX(Precio) AS "Producto más caro" FROM producto;
 --  2. Calcula el precio medio, mínimo y máximo de los productos.
+
+
+CREATE VIEW 
 
 --  3. Lista administradores cuyo email sea único dentro de la tabla.
 
@@ -312,3 +315,15 @@ SELECT * from detalles;
 --  9. Calcula ranking de productos más vendidos mostrando usuario, administrador y cantidad total.
 
 -- 10. Muestra ventas completas donde el camión coincida con el número del día de la venta.
+
+-- ================= EXTRAS =================
+-- COMO CAMBIAR LA VISTA DE LAS TABLAS:
+SELECT * FROM Detalles;
+CREATE OR REPLACE VIEW Vista_Detalles AS (SELECT ID_Producto, CantComprada FROM Detalles);
+SELECT * FROM Vista_Detalles;
+-- =================================================
+SELECT * FROM envio;
+CREATE OR REPLACE VIEW Vista_Envios AS (SELECT ID_Envio, Estado FROM envio);
+SELECT * FROM Vista_Envios;
+SELECT * FROM envio WHERE ID_Envio IN (SELECT ID_Envio FROM Envio WHERE Estado IN ("Enviado"));
+-- 
